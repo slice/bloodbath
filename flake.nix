@@ -29,6 +29,10 @@
 
         defaultPackage = packages.bloodbath;
       }) // {
+        overlay = final: prev: {
+          bloodbath = final.callPackage ./. { };
+        };
+
         nixosModule = { config, lib, pkgs, ... }:
           with lib;
           let cfg = config.services.bloodbath;
