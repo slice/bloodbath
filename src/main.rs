@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use bloodbath::config::Config;
 use bloodbath::dbree::{Dbree, DbreeSearch, DbreeSearchResult};
 use isahc::cookies::CookieBuilder;
@@ -105,7 +105,13 @@ impl App {
 }
 
 fn main() -> Result<()> {
-    let config = std::fs::read_to_string("./config.toml")?;
+    let config_path = std::env::args()
+        .skip(1)
+        .next()
+        .unwrap_or_else(|| String::from("./config.toml"));
+
+    let config = std::fs::read_to_string(&config_path)
+        .with_context(|| format!("failed to read config from {}", config_path))?;
     let config: Config = toml::from_str(&config)?;
 
     let app = App::from_config(config)?;
