@@ -22,7 +22,7 @@
           name = "bloodbath";
           src = ./.;
           nativeBuildInputs = with pkgs;
-            [ pkgconfig ] ++ nixpkgs.lib.optional pkgs.stdenv.isDarwin [
+            [ openssl pkgconfig ] ++ nixpkgs.lib.optional pkgs.stdenv.isDarwin [
               # needed by curl-sys
               pkgs.darwin.apple_sdk.frameworks.SystemConfiguration
             ];
