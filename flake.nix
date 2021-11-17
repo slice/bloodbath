@@ -29,10 +29,6 @@
 
         defaultPackage = packages.bloodbath;
       }) // {
-        overlay = final: prev: {
-          bloodbath = final.callPackage ./. { };
-        };
-
         nixosModule = { config, lib, pkgs, ... }:
           with lib;
           let cfg = config.services.bloodbath;
@@ -67,7 +63,7 @@
                 serviceConfig.type = "oneshot";
                 after = [ "network-online.target" ];
                 wantedBy = [ "network-online.target" ];
-                script = "${pkgs.bloodbath}/bin/bloodbath ${
+                script = "${self.defaultPackage.${pkgs.system}}/bin/bloodbath ${
                     pkgs.writeText "config.toml" cfg.config
                   }";
               };
