@@ -106,17 +106,14 @@ impl App {
 
 fn main() -> Result<()> {
     let config_path = std::env::args()
-        .skip(1)
-        .next()
+        .nth(1)
         .unwrap_or_else(|| String::from("./config.toml"));
 
     let config = std::fs::read_to_string(&config_path)
         .with_context(|| format!("failed to read config from {}", config_path))?;
-    let config: Config =
-        toml::from_str(&config).with_context(|| "failed to deserialize config")?;
+    let config: Config = toml::from_str(&config).with_context(|| "failed to deserialize config")?;
 
-    let app =
-        App::from_config(config).with_context(|| "failed to initialize application")?;
+    let app = App::from_config(config).with_context(|| "failed to initialize application")?;
     for query in &app.config.queries {
         app.discover(&DbreeSearch { query, offset: 0 })
             .with_context(|| format!("failed to query for \"{}\"", query))?;
