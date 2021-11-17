@@ -112,11 +112,14 @@ fn main() -> Result<()> {
 
     let config = std::fs::read_to_string(&config_path)
         .with_context(|| format!("failed to read config from {}", config_path))?;
-    let config: Config = toml::from_str(&config)?;
+    let config: Config =
+        toml::from_str(&config).with_context(|| "failed to deserialize config")?;
 
-    let app = App::from_config(config)?;
+    let app =
+        App::from_config(config).with_context(|| "failed to initialize application")?;
     for query in &app.config.queries {
-        app.discover(&DbreeSearch { query, offset: 0 })?;
+        app.discover(&DbreeSearch { query, offset: 0 })
+            .with_context(|| format!("failed to query for \"{}\"", query))?;
     }
 
     Ok(())
