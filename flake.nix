@@ -15,8 +15,8 @@
   outputs = { self, fenix, naersk, utils, nixpkgs }:
     utils.lib.eachDefaultSystem (system:
       let pkgs = nixpkgs.legacyPackages.${system};
-      in {
-        defaultPackage = (naersk.lib.${system}.override {
+      in rec {
+        packages.bloodbath = (naersk.lib.${system}.override {
           inherit (fenix.packages.${system}.minimal) cargo rustc;
         }).buildPackage {
           name = "bloodbath";
@@ -27,6 +27,7 @@
           ];
         };
 
+        defaultPackage = packages.bloodbath;
       }) // {
         nixosModule = { config, lib, pkgs, ... }:
           with lib;
