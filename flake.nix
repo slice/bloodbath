@@ -29,7 +29,9 @@
 
       }) // {
         nixosModule = { config, lib, pkgs, ... }:
-          with lib; {
+          with lib;
+          let cfg = config.services.bloodbath;
+          in {
             options.services.bloodbath = {
               enable = mkEnableOption "bloodbath";
 
