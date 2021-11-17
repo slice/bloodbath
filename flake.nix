@@ -16,15 +16,16 @@
     utils.lib.eachDefaultSystem (system:
       let pkgs = nixpkgs.legacyPackages.${system};
       in rec {
-        packages.bloodbath = (naersk.lib.${system}.override
-          fenix.packages.${system}.stable.minimalToolchain).buildPackage {
-            name = "bloodbath";
-            src = ./.;
-            nativeBuildInputs = nixpkgs.lib.optional pkgs.stdenv.isDarwin [
-              # needed by curl-sys
-              pkgs.darwin.apple_sdk.frameworks.SystemConfiguration
-            ];
-          };
+        packages.bloodbath = (naersk.lib.${system}.override {
+          inherit (fenix.packages.${system}.stable) cargo rustc;
+        }).buildPackage {
+          name = "bloodbath";
+          src = ./.;
+          nativeBuildInputs = nixpkgs.lib.optional pkgs.stdenv.isDarwin [
+            # needed by curl-sys
+            pkgs.darwin.apple_sdk.frameworks.SystemConfiguration
+          ];
+        };
 
         defaultPackage = packages.bloodbath;
       }) // {
