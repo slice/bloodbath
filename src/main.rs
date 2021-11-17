@@ -1,6 +1,6 @@
 use anyhow::Result;
-use bloodshed::config::Config;
-use bloodshed::dbree::{Dbree, DbreeSearch, DbreeSearchResult};
+use bloodbath::config::Config;
+use bloodbath::dbree::{Dbree, DbreeSearch, DbreeSearchResult};
 use isahc::cookies::CookieBuilder;
 use isahc::{prelude::*, Request};
 use serde_json::Value;
@@ -89,7 +89,7 @@ impl App {
 
     fn post_to_discord_webhook(&self, content: Value) -> Result<()> {
         let mut response = Request::post(&self.config.discord.webhook_uri)
-            .header("User-Agent", "bloodshed/0.0 (+https://slice.zone)")
+            .header("User-Agent", "bloodbath/0.0 (+https://slice.zone)")
             .header("Content-Type", "application/json")
             .body(content.to_string())?
             .send()?;
