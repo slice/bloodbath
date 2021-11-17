@@ -61,7 +61,7 @@
               };
 
               services.bloodbath = {
-                serviceConfig.type = "oneshot";
+                serviceConfig.Type = "oneshot";
                 after = [ "network-online.target" ];
                 wantedBy = [ "network-online.target" ];
                 script = "${self.defaultPackage.${pkgs.system}}/bin/bloodbath ${
