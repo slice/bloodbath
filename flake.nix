@@ -15,7 +15,7 @@
   outputs = { self, fenix, naersk, utils, nixpkgs }:
     utils.lib.eachDefaultSystem (system:
       let pkgs = nixpkgs.legacyPackages.${system};
-      in rec {
+      in {
         defaultPackage = (naersk.lib.${system}.override {
           inherit (fenix.packages.${system}.minimal) cargo rustc;
         }).buildPackage {
@@ -62,7 +62,7 @@
                 serviceConfig.type = "oneshot";
                 after = [ "network-online.target" ];
                 wantedBy = [ "network-online.target" ];
-                script = "${defaultPackage}/bin/bloodbath ${
+                script = "${pkgs.bloodbath}/bin/bloodbath ${
                     pkgs.writeText "config.toml" cfg.config
                   }";
               };
