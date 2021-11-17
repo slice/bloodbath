@@ -17,7 +17,8 @@
       let pkgs = nixpkgs.legacyPackages.${system};
       in rec {
         packages.bloodbath = (naersk.lib.${system}.override {
-          inherit (fenix.packages.${system}.minimal) cargo rustc;
+          inherit (fenix.packages.${system}.stable.minimalToolchain)
+            cargo rustc;
         }).buildPackage {
           name = "bloodbath";
           src = ./.;
