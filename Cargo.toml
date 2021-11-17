@@ -1,0 +1,24 @@
+[package]
+name = "bloodshed"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+scraper = "0.12"
+http = "0.2"
+lazy_static = "1"
+anyhow = "1"
+sled = "0.34"
+toml = "0.5"
+serde_json = "1.0"
+chrono = "0.4"
+
+[dependencies.serde]
+version = "1.0"
+features = ["derive"]
+
+[dependencies.isahc]
+version = "1.6"
+features = ["cookies"]
