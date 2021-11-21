@@ -72,6 +72,7 @@
                 Type = "oneshot";
                 User = "bloodbath";
                 Group = "bloodbath";
+                DynamicUser = true;
                 StateDirectory = "bloodbath";
               };
               after = [ "network-online.target" ];
