@@ -36,7 +36,8 @@
         let
           cfg = config.services.bloodbath;
           pkg = self.defaultPackage.${pkgs.system};
-          finalTomlConfig = (pkgs.formats.toml {}).generate "config.toml" (cfg.config // {
+          tomlConfigPath = if cfg.configFile != null then cfg.configFile else (
+            (pkgs.formats.toml {}).generate "config.toml" (cfg.config // {
             # systemd StateDirectory
             database_path = "/var/lib/bloodbath";
           });
@@ -49,6 +50,15 @@
               default = "";
               example = "";
               description = "The configuration.";
+            };
+
+            configFile = mkOption {
+              type = types.path;
+              default = null;
+              description = ''
+                A path to the a TOML configuration. Takes priority over the config option.
+                Make sure to set `database_path` to `/var/lib/bloodbath`.
+              '';
             };
 
             timer = mkOption {
@@ -77,7 +87,7 @@
               };
               after = [ "network-online.target" ];
               wantedBy = [ "network-online.target" ];
-              script = "${pkg}/bin/bloodbath ${finalTomlConfig}";
+              script = "${pkg}/bin/bloodbath ${tomlConfigPath}";
             };
           };
         };
