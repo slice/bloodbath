@@ -33,16 +33,22 @@
     in packages // {
       nixosModule = { config, lib, pkgs, ... }:
         with lib;
-        let cfg = config.services.bloodbath;
+        let
+          cfg = config.services.bloodbath;
+          pkg = self.defaultPackage.${pkgs.system};
+          finalTomlConfig = (pkgs.formats.toml {}).generate "config.toml" (cfg.config // {
+            # systemd StateDirectory
+            database_path = "/var/lib/bloodbath";
+          });
         in {
           options.services.bloodbath = {
             enable = mkEnableOption "bloodbath";
 
             config = mkOption {
-              type = types.str;
+              type = types.attrsOf types.anything;
               default = "";
               example = "";
-              description = "The configuration (written in TOML).";
+              description = "The configuration.";
             };
 
             timer = mkOption {
@@ -61,13 +67,16 @@
               timerConfig.OnCalendar = cfg.timer;
             };
 
-            services.bloodbath = {
-              serviceConfig.Type = "oneshot";
+            services.bloodbath = rec {
+              serviceConfig = {
+                Type = "oneshot";
+                User = "bloodbath";
+                Group = "bloodbath";
+                StateDirectory = "bloodbath";
+              };
               after = [ "network-online.target" ];
               wantedBy = [ "network-online.target" ];
-              script = "${self.defaultPackage.${pkgs.system}}/bin/bloodbath ${
-                  pkgs.writeText "config.toml" cfg.config
-                }";
+              script = "${pkg}/bin/bloodbath ${finalTomlConfig}";
             };
           };
         };
