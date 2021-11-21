@@ -36,11 +36,13 @@
         let
           cfg = config.services.bloodbath;
           pkg = self.defaultPackage.${pkgs.system};
-          tomlConfigPath = if cfg.configFile != null then cfg.configFile else (
-            (pkgs.formats.toml {}).generate "config.toml" (cfg.config // {
-            # systemd StateDirectory
-            database_path = "/var/lib/bloodbath";
-          });
+          tomlConfigPath = if cfg.configFile != null then
+            cfg.configFile
+          else
+            ((pkgs.formats.toml { }).generate "config.toml" (cfg.config // {
+              # systemd StateDirectory
+              database_path = "/var/lib/bloodbath";
+            }));
         in {
           options.services.bloodbath = {
             enable = mkEnableOption "bloodbath";
