@@ -49,13 +49,13 @@
 
             config = mkOption {
               type = types.attrsOf types.anything;
-              default = "";
+              default = { };
               example = "";
               description = "The configuration.";
             };
 
             configFile = mkOption {
-              type = types.path;
+              type = types.nullOr types.path;
               default = null;
               description = ''
                 A path to the a TOML configuration. Takes priority over the config option.
