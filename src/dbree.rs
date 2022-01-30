@@ -40,7 +40,7 @@ impl Dbree {
     pub fn search(&self, search: &DbreeSearch) -> Result<Vec<DbreeSearchResult>> {
         let mut base_parts = self.base_uri.clone().into_parts();
 
-        let path_and_query = format!("/s/{}?page={}", search.query, search.offset.to_string());
+        let path_and_query = format!("/s/{}?page={}", search.query, search.offset);
         base_parts.path_and_query = Some(path_and_query.try_into()?);
         let uri = Uri::from_parts(base_parts)?;
 
