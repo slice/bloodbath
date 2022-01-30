@@ -63,6 +63,19 @@ impl App {
 
             println!("{}: {} ({})", result.file.id, result.file.name, result.size);
 
+            if self
+                .config
+                .ignored_keywords
+                .iter()
+                .any(|ignored_keyword| result.file.name.contains(ignored_keyword))
+            {
+                eprintln!(
+                    "ignoring {}, because it contains an ignored keyword",
+                    result.file.id
+                );
+                continue;
+            }
+
             embeds.push(self.make_embed_for_search_result(&result));
 
             self.db.insert(key, b"")?;

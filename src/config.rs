@@ -7,6 +7,9 @@ pub struct Config {
     #[serde(default = "default_dbree_base_uri")]
     pub dbree_base_uri: String,
 
+    #[serde(default)]
+    pub ignored_keywords: Vec<String>,
+
     pub discord: DiscordConfig,
 
     pub ddos_guard: DdosGuardConfig,
