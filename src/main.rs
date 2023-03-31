@@ -15,16 +15,10 @@ impl App {
     fn from_config(config: Config) -> Result<Self> {
         let db: sled::Db = sled::open(&config.database_path).unwrap();
         let dbree = Dbree::new(config.dbree_base_uri.parse()?)?;
+        let jar = dbree.client.cookie_jar().unwrap();
 
-        let cookie1 = CookieBuilder::new("__ddg1", &config.ddos_guard.ddg1).build()?;
-        let cookie2 = CookieBuilder::new("__ddg2", &config.ddos_guard.ddg2).build()?;
-        let cookie3 = CookieBuilder::new("__ddgid", &config.ddos_guard.ddgid).build()?;
-        for cookie in [cookie1, cookie2, cookie3] {
-            dbree
-                .client
-                .cookie_jar()
-                .unwrap()
-                .set(cookie, &dbree.base_uri)?;
+        for (name, value) in config.cookies.iter() {
+            jar.set(CookieBuilder::new(name, value).build()?, &dbree.base_uri)?;
         }
 
         Ok(App { config, db, dbree })
